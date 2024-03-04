@@ -1,24 +1,24 @@
 import pygame
 
+from config import Config
 from const import *
-from board import Board
-from dragger import Dragger
+from board import *
+from dragger import *
 
 class Game:
 
     def __init__(self):
         self.next_player = 'white'
         self.board = Board()
+        self.hover_sqr = None
         self.dragger = Dragger()
+        self.config = Config()
 
     def show_bg(self, surface):
+        theme = self.config.theme
         for row in range(ROWS):
             for col in range(COLS):
-                if (row + col) % 2 == 0:
-                    color = (234, 235, 200) #light green
-                else:
-                    color = (119, 154, 88) #dark green
-
+                color = theme.bg.light if (row + col) % 2 == 0 else theme.bg.dark
                 rect = (col * SQSIZE, row * SQSIZE, SQSIZE,SQSIZE)
                 pygame.draw.rect(surface, color, rect)
     def show_pieces(self, surface):
@@ -54,6 +54,13 @@ class Game:
                 rect = (pos.col * SQSIZE, pos.row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
+    def show_hover(self, surface):
+        if self.hover_sqr:
+            color = (180, 180, 180)
+            rect = (self.hover_sqr.col * SQSIZE, self.hover_sqr.row * SQSIZE, SQSIZE, SQSIZE)
+            pygame.draw.rect(surface, color, rect, width=3)
+    def set_hover(self, row, col):
+        self.hover_sqr = self.board.squares[row][col]
 
     def nex_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
