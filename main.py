@@ -5,6 +5,8 @@ from const import *
 from game import *
 from square import *
 from move import *
+
+
 class Main:
 
     def __init__(self):
@@ -12,10 +14,11 @@ class Main:
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
         pygame.display.set_caption("Chess")
         self.game = Game()
+
     def mainloop(self):
 
-        board = self.game.board
         screen = self.screen
+        board = self.game.board
         game = self.game
         dragger = self.game.dragger
 
@@ -72,7 +75,9 @@ class Main:
                         move = Move(initial, final)
 
                         if board.valid_move(dragger.piece, move):
+                            capture = board.squares[released_row][released_col].has_piece()
                             board.move(dragger.piece, move)
+                            game.play_sound(capture)
                             game.show_bg(screen)
                             game.show_last_move(screen)
                             game.show_pieces(screen)
@@ -80,11 +85,23 @@ class Main:
 
                     dragger.undrag_piece()
 
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_t:
+                        game.change_theme()
+
+                    if event.key == pygame.K_r:
+                        game.reset()
+                        screen = self.screen
+                        board = self.game.board
+                        game = self.game
+                        dragger = self.game.dragger
+
                 elif event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
             pygame.display.update()
+
 
 main = Main()
 main.mainloop()
