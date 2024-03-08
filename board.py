@@ -244,5 +244,5 @@ class Board:
     def valid_move(self, piece, move):
         return move in piece.moves
 
-    def in_check(self, piece, move):
+
 
